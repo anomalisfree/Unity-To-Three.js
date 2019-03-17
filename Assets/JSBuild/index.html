@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>Scene from UNITY</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="three.min.js"></script>
+		<script type="text/javascript">
+				obj = JSON.parse(json);
+			
+				var scene = new THREE.Scene();
+				var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+				var renderer = new THREE.WebGLRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+			
+				obj.cubesData.forEach(function(item, i, arr) {
+					var geometry = new THREE.BoxGeometry(item.transformData.scaleX, item.transformData.scaleY, item.transformData.scaleZ);
+					var material = new THREE.MeshStandardMaterial( 
+					{ 
+						color: parseInt(item.color , 16)
+					} );
+					
+					var cube = new THREE.Mesh( geometry, material );
+					scene.add( cube );
+				
+					cube.position.x = item.transformData.posX;
+					cube.position.y = item.transformData.posY;
+					cube.position.z = item.transformData.posZ;
+				
+					cube.rotation.x = item.transformData.rotX;
+					cube.rotation.y = item.transformData.rotY;
+					cube.rotation.z = item.transformData.rotZ;
+				});
+			
+				camera.position.x = obj.cameraData.transformData.posX;
+				camera.position.y = obj.cameraData.transformData.posY;
+				camera.position.z = obj.cameraData.transformData.posZ;
+					
+				camera.rotation.x = obj.cameraData.transformData.rotX;
+				camera.rotation.y = obj.cameraData.transformData.rotY;
+				camera.rotation.z = obj.cameraData.transformData.rotZ;
+			
+				scene.add( new THREE.AmbientLight(0xffffff) );
+
+				var light = new THREE.PointLight(0xffffff, 1, 40);
+				light.position.set(0, 0, 0);
+				scene.add(light);
+			
+				renderer.render(scene, camera);	
+		</script>
+
+	</body>
+</html>
