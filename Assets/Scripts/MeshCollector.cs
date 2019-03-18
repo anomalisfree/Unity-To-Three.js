@@ -73,7 +73,7 @@ public class MeshCollector : MonoBehaviour
 		return transformData;
 	}
 
-	public static (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
+	private static (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
 	{
 		var position = new Vector3
 		(
@@ -99,7 +99,7 @@ public class MeshCollector : MonoBehaviour
 		return (position, rotation, scale);
 	}
 
-	static void WriteString(string json)
+	private static void WriteString(string json)
 	{
 		var path = "Assets/JSBuild/data.js";
 
