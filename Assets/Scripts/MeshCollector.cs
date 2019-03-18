@@ -72,12 +72,12 @@ public class MeshCollector : MonoBehaviour
 		return transformData;
 	}
 
-	private static (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
+	private (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
 	{
 		var position = new Vector3
 		(
-			transform.localPosition.x, 
-			transform.localPosition.y, 
+			transform.localPosition.x,
+			transform.localPosition.y,
 			-transform.localPosition.z
 		);
 
@@ -90,15 +90,15 @@ public class MeshCollector : MonoBehaviour
 
 		var scale = new Vector3
 		(
-			-transform.localScale.x, 
-			-transform.localScale.y, 
+			-transform.localScale.x,
+			-transform.localScale.y,
 			transform.localScale.z
 		);
 
 		return (position, rotation, scale);
 	}
 
-	private static void WriteString(string json)
+	private void WriteString(string json)
 	{
 		var path = "Assets/JSBuild/data.js";
 
