@@ -21,7 +21,7 @@ public class MeshCollector : MonoBehaviour
 
 	private List<CubeData> GetCubes()
 	{
-		List<CubeData> cubesData = new List<CubeData>();
+		var cubesData = new List<CubeData>();
 		var meshes = FindObjectsOfType<MeshFilter>();
 
 		foreach (var mesh in meshes)
@@ -108,7 +108,7 @@ public class MeshCollector : MonoBehaviour
 			File.Delete(path);
 		}
 
-		StreamWriter writer = new StreamWriter(path, true);
+		var writer = new StreamWriter(path, true);
 		writer.WriteLine($"var json = '{json}';");
 		writer.Close();
 	}
