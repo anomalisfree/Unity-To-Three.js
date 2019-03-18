@@ -29,8 +29,7 @@ public class MeshCollector : MonoBehaviour
 			if (mesh.sharedMesh.name == "Cube" || mesh.sharedMesh.name == "Cube Instance")
 			{
 				var cubeData = new CubeData();
-				var transformData = GetTransformData(mesh.gameObject.transform);
-				cubeData.transformData = transformData;
+				cubeData.transformData = GetTransformData(mesh.gameObject.transform);
 				cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().material.color);
 				cubesData.Add(cubeData);
 			}
