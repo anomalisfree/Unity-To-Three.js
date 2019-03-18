@@ -6,126 +6,125 @@ using System.IO;
 
 public class MeshCollector : MonoBehaviour
 {
-    public void SendScene()
-    {
-        var sendedData = new SendedData();
-        sendedData.cubesData = GetCubes();
-        sendedData.cameraData = GetCamera();
+	public void SendScene()
+	{
+		var sendedData = new SendedData();
+		sendedData.cubesData = GetCubes();
+		sendedData.cameraData = GetCamera();
 
-        var json = JsonUtility.ToJson(sendedData);
-        Debug.Log(json);
+		var json = JsonUtility.ToJson(sendedData);
+		Debug.Log(json);
 
-        WriteString(json);
-        Application.OpenURL("file://" + Application.dataPath + "/JSBuild/index.html");
-    }
+		WriteString(json);
+		Application.OpenURL($"file://{Application.dataPath}/JSBuild/index.html");
+	}
 
-    private List<CubeData> GetCubes()
-    {
-        List<CubeData> cubesData = new List<CubeData>();
-        var meshes = FindObjectsOfType<MeshFilter>();
+	private List<CubeData> GetCubes()
+	{
+		List<CubeData> cubesData = new List<CubeData>();
+		var meshes = FindObjectsOfType<MeshFilter>();
 
-        foreach (var mesh in meshes)
-        {
-            if (mesh.sharedMesh.name == "Cube" || mesh.sharedMesh.name == "Cube Instance")
-            {
-                var cubeData = new CubeData();
-                var transformData = GetTransformData(mesh.gameObject.transform);
-                cubeData.transformData = transformData;
-                cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().material.color);
-                cubesData.Add(cubeData);
-            }
-        }
+		foreach (var mesh in meshes)
+		{
+			if (mesh.sharedMesh.name == "Cube" || mesh.sharedMesh.name == "Cube Instance")
+			{
+				var cubeData = new CubeData();
+				var transformData = GetTransformData(mesh.gameObject.transform);
+				cubeData.transformData = transformData;
+				cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().material.color);
+				cubesData.Add(cubeData);
+			}
+		}
 
-        return cubesData;
-    }
+		return cubesData;
+	}
 
-    private CameraData GetCamera()
-    {
-        var camera = GameObject.FindGameObjectWithTag("MainCamera");
-        var cameraData = new CameraData();
+	private CameraData GetCamera()
+	{
+		var camera = GameObject.FindGameObjectWithTag("MainCamera");
+		var cameraData = new CameraData();
 
-        if (camera != null)
-        {
-            cameraData.transformData = GetTransformData(camera.transform);
-        }
+		if (camera != null)
+		{
+			cameraData.transformData = GetTransformData(camera.transform);
+		}
 
-        return cameraData;
-    }
+		return cameraData;
+	}
 
-    private TransformData GetTransformData(Transform transform)
-    {
-        var transformData = new TransformData();
+	private TransformData GetTransformData(Transform transform)
+	{
+		var transformData = new TransformData();
 
-        Vector3 oldPosition = transform.position;
-        Quaternion OldRotation = transform.rotation;
-        Vector3 olDScale = transform.lossyScale;
+		var zFlipTransform = ZFlipTransform(transform);
 
-        ZFlipTransform(transform);
+		transformData.posX = zFlipTransform.pos.x;
+		transformData.posY = zFlipTransform.pos.y;
+		transformData.posZ = zFlipTransform.pos.z;
 
-        transformData.posX = transform.position.x;
-        transformData.posY = transform.position.y;
-        transformData.posZ = transform.position.z;
+		transformData.rotX = zFlipTransform.rot.x;
+		transformData.rotY = zFlipTransform.rot.y;
+		transformData.rotZ = zFlipTransform.rot.z;
 
-        transformData.rotX = transform.rotation.eulerAngles.x * (Mathf.PI / 180);
-        transformData.rotY = transform.rotation.eulerAngles.y * (Mathf.PI / 180);
-        transformData.rotZ = transform.rotation.eulerAngles.z * (Mathf.PI / 180);
+		transformData.scaleX = zFlipTransform.scale.x;
+		transformData.scaleY = zFlipTransform.scale.y;
+		transformData.scaleZ = zFlipTransform.scale.z;
 
-        transformData.scaleX = transform.localScale.x;
-        transformData.scaleY = transform.localScale.y;
-        transformData.scaleZ = transform.localScale.z;
+		return transformData;
+	}
 
-        transform.position = oldPosition;
-        transform.rotation = OldRotation;
-        transform.localScale = olDScale;
+	public static (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
+	{
+		Vector3 position = new Vector3
+		(
+			transform.localPosition.x, 
+			transform.localPosition.y, 
+			-transform.localPosition.z
+		);
 
-        return transformData;
-    }
+		Vector3 rotation = new Vector3
+		(
+			-transform.rotation.eulerAngles.x,
+			-transform.rotation.eulerAngles.y,
+			transform.rotation.eulerAngles.z
+		) * (Mathf.PI / 180);
 
-    public static void ZFlipTransform(Transform transform)
-    {
-        Vector3 position = transform.localPosition;
-        transform.localPosition = new Vector3(position.x, position.y, -position.z);
+		Vector3 scale = new Vector3
+		(
+			-transform.localScale.x, 
+			-transform.localScale.y, 
+			transform.localScale.z
+		);
 
-        Quaternion rotation = transform.localRotation;
-        ZFlipRotation(ref rotation);
-        transform.localRotation = rotation;
+		return (position, rotation, scale);
+	}
 
-        Vector3 scale = transform.localScale;
-        transform.localScale = new Vector3(-scale.x, -scale.y, scale.z);
-    }
+	static void WriteString(string json)
+	{
+		string path = "Assets/JSBuild/data.js";
 
-    public static void ZFlipRotation(ref Quaternion rotation)
-    {
-        Vector3 eulerAngles = rotation.eulerAngles;
-        rotation.eulerAngles = new Vector3(-eulerAngles.x, -eulerAngles.y, eulerAngles.z);
-    }
+		if (File.Exists(path))
+		{
+			File.Delete(path);
+		}
 
-    static void WriteString(string json)
-    {
-        string path = "Assets/JSBuild/data.js";
-
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-
-        StreamWriter writer = new StreamWriter(path, true);
-        writer.WriteLine($"var json = '{json}';");
-        writer.Close();
-    }
+		StreamWriter writer = new StreamWriter(path, true);
+		writer.WriteLine($"var json = '{json}';");
+		writer.Close();
+	}
 }
 
 [CustomEditor(typeof(MeshCollector))]
 public class MeshCollectorEditor : Editor
 {
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
+	public override void OnInspectorGUI()
+	{
+		DrawDefaultInspector();
 
-        MeshCollector meshCollector = (MeshCollector)target;
-        if (GUILayout.Button("Send scene to html"))
-        {
-            meshCollector.SendScene();
-        }
-    }
+		MeshCollector meshCollector = (MeshCollector)target;
+		if (GUILayout.Button("Send scene to html"))
+		{
+			meshCollector.SendScene();
+		}
+	}
 }
