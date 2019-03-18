@@ -75,21 +75,21 @@ public class MeshCollector : MonoBehaviour
 
 	public static (Vector3 pos, Vector3 rot, Vector3 scale) ZFlipTransform(Transform transform)
 	{
-		Vector3 position = new Vector3
+		var position = new Vector3
 		(
 			transform.localPosition.x, 
 			transform.localPosition.y, 
 			-transform.localPosition.z
 		);
 
-		Vector3 rotation = new Vector3
+		var rotation = new Vector3
 		(
 			-transform.rotation.eulerAngles.x,
 			-transform.rotation.eulerAngles.y,
 			transform.rotation.eulerAngles.z
 		) * (Mathf.PI / 180);
 
-		Vector3 scale = new Vector3
+		var scale = new Vector3
 		(
 			-transform.localScale.x, 
 			-transform.localScale.y, 
@@ -101,7 +101,7 @@ public class MeshCollector : MonoBehaviour
 
 	static void WriteString(string json)
 	{
-		string path = "Assets/JSBuild/data.js";
+		var path = "Assets/JSBuild/data.js";
 
 		if (File.Exists(path))
 		{
@@ -121,7 +121,7 @@ public class MeshCollectorEditor : Editor
 	{
 		DrawDefaultInspector();
 
-		MeshCollector meshCollector = (MeshCollector)target;
+		var meshCollector = (MeshCollector)target;
 		if (GUILayout.Button("Send scene to html"))
 		{
 			meshCollector.SendScene();
