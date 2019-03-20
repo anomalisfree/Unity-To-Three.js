@@ -30,7 +30,12 @@ public class MeshCollector : MonoBehaviour
 			{
 				var cubeData = new CubeData();
 				cubeData.transformData = GetTransformData(mesh.gameObject.transform);
-				cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().material.color);
+				cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().sharedMaterial.color);
+				cubeData.id = mesh.gameObject.GetInstanceID();
+
+				if(mesh.transform.parent != null)
+					cubeData.parentId = mesh.transform.parent.GetInstanceID();
+
 				cubesData.Add(cubeData);
 			}
 		}
