@@ -24,12 +24,8 @@
 				function SetCubes(parentId, parentCube) {
 					obj.cubesData.forEach(function(item, i, arr) {
 
-						console.log(item.parentId + " | " + parentId);
-
 						if (item.parentId == parentId) {
-							var geometry = new THREE.BoxGeometry(item.transformData.scaleX,
-								item.transformData.scaleY,
-								item.transformData.scaleZ);
+							var geometry = new THREE.BoxGeometry(1,1,1);
 							var material = new THREE.MeshStandardMaterial(
 								{
 									color: parseInt(item.color, 16)
@@ -38,11 +34,11 @@
 							var cube = new THREE.Mesh(geometry, material);
 
 							if (parentCube != null) {
-								parentCube.add(cube)
+								parentCube.add(cube);
 							} else {
 								scene.add(cube);
 							}
-
+							
 							cube.position.x = item.transformData.posX;
 							cube.position.y = item.transformData.posY;
 							cube.position.z = item.transformData.posZ;
@@ -50,6 +46,10 @@
 							cube.rotation.x = item.transformData.rotX;
 							cube.rotation.y = item.transformData.rotY;
 							cube.rotation.z = item.transformData.rotZ;
+
+							cube.scale.x = item.transformData.scaleX;
+							cube.scale.y = item.transformData.scaleY;
+							cube.scale.z = item.transformData.scaleZ;
 
 							SetCubes(item.id, cube);
 						}

@@ -95,8 +95,8 @@ public class MeshCollector : MonoBehaviour
 
 		var scale = new Vector3
 		(
-			-transform.localScale.x,
-			-transform.localScale.y,
+			transform.localScale.x,
+			transform.localScale.y,
 			transform.localScale.z
 		);
 
