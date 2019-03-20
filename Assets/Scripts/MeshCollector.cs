@@ -76,9 +76,9 @@ public class MeshCollector : MonoBehaviour
 	{
 		var position = new Vector3
 		(
-			transform.localPosition.x,
-			transform.localPosition.y,
-			-transform.localPosition.z
+			transform.position.x,
+			transform.position.y,
+			-transform.position.z
 		);
 
 		var rotation = new Vector3
@@ -90,9 +90,9 @@ public class MeshCollector : MonoBehaviour
 
 		var scale = new Vector3
 		(
-			-transform.localScale.x,
-			-transform.localScale.y,
-			transform.localScale.z
+			-transform.lossyScale.x,
+			-transform.lossyScale.y,
+			transform.lossyScale.z
 		);
 
 		return (position, rotation, scale);
