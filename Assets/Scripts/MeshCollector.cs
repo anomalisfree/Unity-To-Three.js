@@ -31,7 +31,7 @@ public class MeshCollector : MonoBehaviour
 				var cubeData = new CubeData();
 				cubeData.transformData = GetTransformData(mesh.gameObject.transform);
 				cubeData.color = ColorUtility.ToHtmlStringRGB(mesh.gameObject.GetComponent<MeshRenderer>().sharedMaterial.color);
-				cubeData.id = mesh.gameObject.GetInstanceID();
+				cubeData.id = mesh.transform.GetInstanceID();
 
 				if(mesh.transform.parent != null)
 					cubeData.parentId = mesh.transform.parent.GetInstanceID();
@@ -81,23 +81,23 @@ public class MeshCollector : MonoBehaviour
 	{
 		var position = new Vector3
 		(
-			transform.position.x,
-			transform.position.y,
-			-transform.position.z
+			transform.localPosition.x,
+			transform.localPosition.y,
+			-transform.localPosition.z
 		);
 
 		var rotation = new Vector3
 		(
-			-transform.rotation.eulerAngles.x,
-			-transform.rotation.eulerAngles.y,
-			transform.rotation.eulerAngles.z
+			-transform.localRotation.eulerAngles.x,
+			-transform.localRotation.eulerAngles.y,
+			transform.localRotation.eulerAngles.z
 		) * (Mathf.PI / 180);
 
 		var scale = new Vector3
 		(
-			-transform.lossyScale.x,
-			-transform.lossyScale.y,
-			transform.lossyScale.z
+			-transform.localScale.x,
+			-transform.localScale.y,
+			transform.localScale.z
 		);
 
 		return (position, rotation, scale);

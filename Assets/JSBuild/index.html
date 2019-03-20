@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
 	<head>
 		<title>Scene from UNITY</title>
 		<style>
@@ -18,25 +18,43 @@
 				var renderer = new THREE.WebGLRenderer();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
-			
-				obj.cubesData.forEach(function(item, i, arr) {
-					var geometry = new THREE.BoxGeometry(item.transformData.scaleX, item.transformData.scaleY, item.transformData.scaleZ);
-					var material = new THREE.MeshStandardMaterial( 
-					{ 
-						color: parseInt(item.color , 16)
-					} );
-					
-					var cube = new THREE.Mesh( geometry, material );
-					scene.add( cube );
-				
-					cube.position.x = item.transformData.posX;
-					cube.position.y = item.transformData.posY;
-					cube.position.z = item.transformData.posZ;
-				
-					cube.rotation.x = item.transformData.rotX;
-					cube.rotation.y = item.transformData.rotY;
-					cube.rotation.z = item.transformData.rotZ;
-				});
+
+				SetCubes(0, null);
+
+				function SetCubes(parentId, parentCube) {
+					obj.cubesData.forEach(function(item, i, arr) {
+
+						console.log(item.parentId + " | " + parentId);
+
+						if (item.parentId == parentId) {
+							var geometry = new THREE.BoxGeometry(item.transformData.scaleX,
+								item.transformData.scaleY,
+								item.transformData.scaleZ);
+							var material = new THREE.MeshStandardMaterial(
+								{
+									color: parseInt(item.color, 16)
+								});
+
+							var cube = new THREE.Mesh(geometry, material);
+
+							if (parentCube != null) {
+								parentCube.add(cube)
+							} else {
+								scene.add(cube);
+							}
+
+							cube.position.x = item.transformData.posX;
+							cube.position.y = item.transformData.posY;
+							cube.position.z = item.transformData.posZ;
+
+							cube.rotation.x = item.transformData.rotX;
+							cube.rotation.y = item.transformData.rotY;
+							cube.rotation.z = item.transformData.rotZ;
+
+							SetCubes(item.id, cube);
+						}
+					});
+				}
 			
 				camera.position.x = obj.cameraData.transformData.posX;
 				camera.position.y = obj.cameraData.transformData.posY;
